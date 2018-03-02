@@ -73,9 +73,9 @@ class CuckooHashTable
 		explicit CuckooHashTable(int size) :
 			_array{ vector<HashTuple>(MathHelpers::NextPrime(size)) }, 
 			_hashFunctions{ HashFamily() }, 
+			_size{ 0 },
 			_rehashCount{ 0 }
 		{
-			_size = _array.size();
 			_numHashFunctions = _hashFunctions.NumFunctions();
 			Clear();
 		}
@@ -123,24 +123,74 @@ class CuckooHashTable
 			}
 		}
 		
+		/**
+			Returns whether the hash table contains the given key.
+		*/
 		bool Contains(const T& key) const
 		{
-			return false;
+			return Find(key) > -1;
 		}
 
+		/**
+			Removes the given item from the hash table if it exists.
+
+			Returns true if the item was removed and false otherwise.
+		*/
 		bool Remove(const T& key)
 		{
-			return false;
+			int index = Find(key);
+
+			if (!IsActive(index))
+			{
+				return false;
+			}
+
+			/* Remove the item. */
+			_array[index]._isActive = false;
+			--_size;
+			return true;
 		}
 
+		/**
+			Inserts the given key into the table if it does not already exist.
+			Returns true if the key was removed and false otherwise.
+		*/
 		bool Insert(const T& key)
 		{
-			return false;
-		}
+			if (Contains(key))
+			{
+				return false;
+			}
 
+			/* Enlarge the hash table if the max load factor has been exceeded. */
+			if (_size >= _array.size() * MAX_LOAD_FACTOR)
+			{
+				Expand()
+			}
+
+			return StandardInsert(key);
+		}
+		
+		/**
+			Inserts the given key into the table using move semantics 
+			if it does not already exist.
+			
+			Returns true if the key was removed and false otherwise.
+		*/
 		bool Insert(T&& key)
 		{
-			return false;
+			if (Contains(key))
+			{
+				return false;
+			}
+
+			/* Enlarge the hash table if the max load factor has been exceeded. */
+			if (_size >= _array.size() * MAX_LOAD_FACTOR)
+			{
+				Expand()
+			}
+
+			return MoveInsert(key);
 		}
 
     private:
@@ -154,19 +204,42 @@ class CuckooHashTable
 			return false;
 		}
 
+		/**
+			Returns whether the tuple at the given index is active.
+		*/
 		bool IsActive(int index) const
 		{
-			return false;
+			return _array[index]._isActive;
 		}
 
+		/**
+			Returns the hash value for a given key.
+		*/
 		size_t Hash(const T& key, int tableIndex) const
 		{
-			return 0;
+			return _hashFunctions.Hash(key, tableIndex) % _array.size();
 		}
 
+		/**
+			Searches the hash table for the given key.
+			Returns the key's index if it is found and a negative int otherwise.
+		*/
 		int Find(const T& key) const
 		{
+			/* Check each hash. */
+			for (int i = 0; i < _numHashFunctions; ++i)
+			{
+				int searchIndex = Hash(key, i)
+				
+				/* If the tuple is active and contains the right value, return its index. */
+				if (IsActive(searchIndex) &&
+					_array[searchIndex].item == key)
+				{
+					return searchIndex;
+				}
+			}
 
+			return -1
 		}
 
 		void Expand()
