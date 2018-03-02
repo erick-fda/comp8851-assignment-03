@@ -43,21 +43,37 @@
         ./COMP8851_Asg03_A00925871/Question06/
 
 7.)---------------------------------------------------------------------------------------
-    Place the N players in an array of size N with indeces [0-(N-1)].
+    Place the N players in a "roster" array of size N.
 
-    For each iteration of the algorithm (i.e., each day in the tournament), make each 
-    player with index i < N/2 play against the player with index j = ((N / 2) + i).
+    Make a two-dimensional array for the tournament schedule with N-1 rows and N columns. 
+    Each row represents a day of the tournament and each cell in the row represents the 
+    opponent to be faced by the player with that cell's index on that day.
 
-    Then remove the last item in the array, move all items with indeces > 0 to the right 
-    by one, and reinsert the previously last element at index 1. Pass the new array to 
-    the next iteration of recursive algorithm.
+    For each iteration of the algorithm (i.e., each day in the tournament), fill out a 
+    day in the tournament schedule. Make each player with index i < N/2 in the roster 
+    play against the player with index N-(1+i) on this day.
+
+    Then remove the last item in the roster array, move all items with indeces > 0 to the 
+    right by one, and reinsert the previously last element at index 1. Pass the new roster 
+    array to the next iteration of the recursive algorithm.
     
-    Once a depth of N-1 is reached, return the schedule for the day. Each iteration 
-    should append the result of its subsequent iteration to the end of its own and return 
-    that as the result. The list returned by the top-level iteration will be the schedule 
-    for the tournament.
+    Once a depth of N-1 is reached, return, folding up through the recursive calls to the 
+    original. The two-dimensional schedule array will now be filled with the schedule 
+    data for the entire tournament.
+
+    My source code for this question can be found at
+        ./COMP8851_Asg03_A00925871/Question07/Question07.cpp
+
+    The executable at 
+        
+        ./COMP8851_Asg03_A00925871/Debug/Question07.exe
+
+    can be run by providing a single command-line argument for k. So if 3 is given as the 
+    argument, for example, a tournament schedule for 8 (2^k) players will be generated. 
     
-    
+    Note that since the program prints the two-dimensional schedule array, the output may 
+    become oddly formatted on a small window if the given k is large. Enlarge the window 
+    or decrease the text size if necessary.
 
 8.)---------------------------------------------------------------------------------------
     My response to this question can be found at
