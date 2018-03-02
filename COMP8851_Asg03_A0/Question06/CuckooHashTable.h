@@ -15,7 +15,12 @@
 /*========================================================================================
 	Dependencies
 ========================================================================================*/
+#include <vector>
+#include <random>
+#include "MathHelpers.h"
+#include "CuckooHashFamily.h"
 
+using std::vector;
 
 /*========================================================================================
 	CuckooHashTable	
@@ -43,18 +48,37 @@ class CuckooHashTable
 		Instance Fields
     ----------------------------------------------------------------------------------------*/
     private:
+		static const int DEFAULT_SIZE;
+		static const float MAX_LOAD_FACTOR;
+		static const int MAX_REHASHES;
+		
+		vector<HashTuple> _array;
+		HashFamily _hashFunctions;
+		int _size;
+		int _numHashFunctions;
+		int _rehashCount;
 
+		std::mt19937 _randomGenerator;
+		std::uniform_int_distribution<int> _distribution;
 
     /*----------------------------------------------------------------------------------------
 		Resource Management
     ----------------------------------------------------------------------------------------*/
     public:
         /** Default constructor. */
-		explicit CuckooHashTable()
+		explicit CuckooHashTable() :
+			CuckooHashTable(DEFAULT_SIZE)
 		{}
 
-		explicit CuckooHashTable(int size)
-		{}
+		explicit CuckooHashTable(int size) :
+			_array{ vector<HashTuple>(MathHelpers::NextPrime(size)) }, 
+			_hashFunctions{ HashFamily() }, 
+			_rehashCount{ 0 }
+		{
+			_size = _array.size();
+			_numHashFunctions = _hashFunctions.NumFunctions();
+			Clear();
+		}
 
         /** Copy constructor. */
         CuckooHashTable(const CuckooHashTable& rhs) = delete;
@@ -87,16 +111,88 @@ class CuckooHashTable
 		Instance Methods
 	----------------------------------------------------------------------------------------*/
     public:
-		void Clear();
+		/**
+			Removes all elements from the hash table.
+		*/
+		void Clear()
+		{
+			_size = 0;
+			for (auto& eachItem : _array)
+			{
+				eachItem._isActive = false;
+			}
+		}
 		
-		bool Contains(const T& key) const;
+		bool Contains(const T& key) const
+		{
+			return false;
+		}
 
-		bool Remove(const T& key);
+		bool Remove(const T& key)
+		{
+			return false;
+		}
 
-		bool Insert(const T& key);
+		bool Insert(const T& key)
+		{
+			return false;
+		}
 
-		bool Insert(T&& key);
+		bool Insert(T&& key)
+		{
+			return false;
+		}
 
     private:
+		bool StandardInsert(const T& key)
+		{
+			return false;
+		}
 
+		bool MoveInsert(T&& key)
+		{
+			return false;
+		}
+
+		bool IsActive(int index) const
+		{
+			return false;
+		}
+
+		size_t Hash(const T& key, int tableIndex) const
+		{
+			return 0;
+		}
+
+		int Find(const T& key) const
+		{
+
+		}
+
+		void Expand()
+		{
+
+		}
+
+		void Rehash()
+		{
+
+		}
+
+		void Rehash(int newSize)
+		{
+
+		}
 };
+
+/*----------------------------------------------------------------------------------------
+	Static Fields
+----------------------------------------------------------------------------------------*/
+template <typename T, typename HashFamily>
+const int CuckooHashTable<T, HashFamily>::DEFAULT_SIZE = 101; 
+
+template <typename T, typename HashFamily>
+const float CuckooHashTable<T, HashFamily>::MAX_LOAD_FACTOR = 0.4f;
+
+template <typename T, typename HashFamily>
+const int CuckooHashTable<T, HashFamily>::MAX_REHASHES = 5;

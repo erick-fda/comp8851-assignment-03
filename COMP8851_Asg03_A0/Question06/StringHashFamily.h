@@ -16,8 +16,8 @@
 	Dependencies
 ========================================================================================*/
 #include <vector>
-#include <random>
 #include <string>
+#include <random>
 
 using std::vector;
 using std::string;
@@ -114,7 +114,4 @@ class StringHashFamily
 
 			return hash;
 		}
-
-    private:
-
 };
