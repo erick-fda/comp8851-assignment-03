@@ -165,7 +165,7 @@ class CuckooHashTable
 			/* Enlarge the hash table if the max load factor has been exceeded. */
 			if (_size >= _array.size() * MAX_LOAD_FACTOR)
 			{
-				Expand()
+				Expand();
 			}
 
 			return StandardInsert(key);
@@ -187,7 +187,7 @@ class CuckooHashTable
 			/* Enlarge the hash table if the max load factor has been exceeded. */
 			if (_size >= _array.size() * MAX_LOAD_FACTOR)
 			{
-				Expand()
+				Expand();
 			}
 
 			return MoveInsert(key);
@@ -229,7 +229,7 @@ class CuckooHashTable
 			/* Check each hash. */
 			for (int i = 0; i < _numHashFunctions; ++i)
 			{
-				int searchIndex = Hash(key, i)
+				int searchIndex = Hash(key, i);
 				
 				/* If the tuple is active and contains the right value, return its index. */
 				if (IsActive(searchIndex) &&
@@ -239,22 +239,55 @@ class CuckooHashTable
 				}
 			}
 
-			return -1
+			return -1;
 		}
 
+		/**
+			Enlarges the hash table and rehashes its keys.
+		*/
 		void Expand()
 		{
-
+			Rehash(static_cast<int>(_array.size() / MAX_LOAD_FACTOR));
 		}
 
+		/**
+			Generates new hash functions and rehashes keys 
+			without increasing the table size.
+		*/
 		void Rehash()
 		{
-
+			_hashFunctions.GenerateFunctions();
+			Rehash(_array.size());
 		}
 
-		void Rehash(int newSize)
+		/**
+			Enlarges the hash table and rehashes keys.
+			
+			The new size of the table will be the lowest prime number 
+			greater than or equal to the suggested size.
+		*/
+		void Rehash(int suggestedSize)
 		{
+			vector<HashTuple> oldArray = _array;
+			_array.resize(MathHelpers::NextPrime(suggestedSize));
 
+			/* Remove all items from the array. */
+			for (auto& eachTuple : _array)
+			{
+				eachTuple._isActive = false;
+			}
+
+			_size = 0;
+
+			/* Insert only active items from the copy of the old array into the new array. 
+				Note that items marked as inactive before Rehash() was called will be lost. */
+			for (auto& eachTuple : oldArray)
+			{
+				if (eachTuple._isActive)
+				{
+					Insert(std::move(eachTuple._item));
+				}
+			}
 		}
 };
 
