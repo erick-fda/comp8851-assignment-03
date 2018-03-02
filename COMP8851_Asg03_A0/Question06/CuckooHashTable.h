@@ -28,6 +28,9 @@ using std::vector;
 template <typename T, typename HashFamily>
 class CuckooHashTable
 {
+	/**
+		Struct for a single item in the hash table.
+	*/
 	struct HashTuple
 	{
 		T _item;
@@ -50,7 +53,7 @@ class CuckooHashTable
     private:
 		static const int DEFAULT_SIZE;
 		static const float MAX_LOAD_FACTOR;
-		static const int MAX_REHASHES;
+		static const int MAX_REHASHES_BEFORE_EXPANDING;
 		
 		vector<HashTuple> _array;
 		HashFamily _hashFunctions;
@@ -78,6 +81,10 @@ class CuckooHashTable
 		{
 			_numHashFunctions = _hashFunctions.NumFunctions();
 			Clear();
+
+			std::random_device random;
+			_randomGenerator = std::mt19937(random());
+			_distribution = std::uniform_int_distribution<int>(0, INT_MAX);
 		}
 
         /** Copy constructor. */
@@ -152,7 +159,7 @@ class CuckooHashTable
 		}
 
 		/**
-			Inserts the given key into the table if it does not already exist.
+			Inserts the given key into the table by copying it if it does not already exist.
 			Returns true if the key was removed and false otherwise.
 		*/
 		bool Insert(const T& key)
@@ -194,14 +201,72 @@ class CuckooHashTable
 		}
 
     private:
+		/**
+			Inserts the given key into the table by copying it.
+		*/
 		bool StandardInsert(const T& key)
 		{
-			return false;
+			const int MAX_DISPLACEMENTS = 100;
+			T keyCopy = key;
+
+			while (true)
+			{
+				int lastIndex = -1;
+				int index = 0;
+
+				/* For each attempt... */
+				for (int attempt = 0; attempt < MAX_DISPLACEMENTS; ++attempt)
+				{
+					/* For each hash function... */
+					for (int i = 0; i < _numHashFunctions; ++i)
+					{
+						index = Hash(keyCopy, i);
+
+						/* If the key index is not occupied, place the key there. */
+						if (!IsActive(index))
+						{
+							_array[index] = std::move(HashTuple(std::move(key), true));
+							++_size;
+							return true;
+						}
+					}
+
+					/* None of the hash indeces for this key are available. 
+						Make like a cuckoo bird and push one out. */
+					int i = 0;
+					do
+					{
+						int hashToUse = _distribution(_randomGenerator) % _numHashFunctions;
+						index = Hash(keyCopy, hashToUse);
+					}
+					while (index == lastIndex && i++ < 5);	/* Try at most 5 different hash functions 
+																to find a next index different from the previous index. */
+
+					lastIndex = index;
+					std::swap(keyCopy, _array[index]._item);
+				}
+
+				/* If the alloted number of rehashes has been exceeded, expand the hash table. */
+				if (_rehashCount > MAX_REHASHES_BEFORE_EXPANDING)
+				{
+					Expand();
+					_rehashCount = 0;
+				}
+				/* If the item to be inserted could not be inserted within the alloted
+					number of displacements, generate new hash functions. */
+				else
+				{
+					Rehash();
+				}
+			}
 		}
 
+		/**
+			Inserts the given key into the table using move semantics.
+		*/
 		bool MoveInsert(T&& key)
 		{
-			return false;
+			StandardInsert(std::move(key));
 		}
 
 		/**
@@ -301,4 +366,4 @@ template <typename T, typename HashFamily>
 const float CuckooHashTable<T, HashFamily>::MAX_LOAD_FACTOR = 0.4f;
 
 template <typename T, typename HashFamily>
-const int CuckooHashTable<T, HashFamily>::MAX_REHASHES = 5;
+const int CuckooHashTable<T, HashFamily>::MAX_REHASHES_BEFORE_EXPANDING = 5;
