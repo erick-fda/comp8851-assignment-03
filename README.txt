@@ -39,8 +39,15 @@
         ./COMP8851_Asg03_A00925871/Question05/
 
 6.)---------------------------------------------------------------------------------------
-    My response to this question can be found at
+    My source code for this question can be found at
         ./COMP8851_Asg03_A00925871/Question06/
+
+    The executable at 
+        
+        ./COMP8851_Asg03_A00925871/Debug/Question06.exe
+
+    can be run without arguments. This program runs a test of the CuckooHashTable class, 
+    demonstrating the functionality of its methods.
 
 7.)---------------------------------------------------------------------------------------
     Place the N players in a "roster" array of size N.

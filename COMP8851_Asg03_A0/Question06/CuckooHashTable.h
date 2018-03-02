@@ -147,7 +147,8 @@ class CuckooHashTable
 		{
 			int index = Find(key);
 
-			if (!IsActive(index))
+			if (index < 0 || 
+				!IsActive(index))
 			{
 				return false;
 			}
@@ -197,7 +198,7 @@ class CuckooHashTable
 				Expand();
 			}
 
-			return MoveInsert(key);
+			return MoveInsert(std::move(key));
 		}
 
     private:
@@ -266,7 +267,7 @@ class CuckooHashTable
 		*/
 		bool MoveInsert(T&& key)
 		{
-			StandardInsert(std::move(key));
+			return StandardInsert(std::move(key));
 		}
 
 		/**
@@ -298,7 +299,7 @@ class CuckooHashTable
 				
 				/* If the tuple is active and contains the right value, return its index. */
 				if (IsActive(searchIndex) &&
-					_array[searchIndex].item == key)
+					_array[searchIndex]._item == key)
 				{
 					return searchIndex;
 				}
