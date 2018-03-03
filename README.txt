@@ -62,8 +62,15 @@
     before the element was added.
 
 5.)---------------------------------------------------------------------------------------
-    My response to this question can be found at
-        ./COMP8851_Asg03_A00925871/Question05/
+    The strongly connected sets of components in the given graph are as follows:
+
+    { A, B, C, D, E, G }, 
+
+    { F }
+
+    There is a path from every node except F to every other node except F. Node F has two 
+    edges entering it but no edges leaving it, and thus cannot be strongly connected to 
+    any other node.
 
 6.)---------------------------------------------------------------------------------------
     My source code for this question can be found at
