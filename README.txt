@@ -47,8 +47,19 @@
     cost to each deletion.
 
 4.)---------------------------------------------------------------------------------------
-    My response to this question can be found at
-        ./COMP8851_Asg03_A00925871/Question04/
+    I will describe the necessary changes for a binary heap.
+
+    This can be achieved simply by having the heap keep a field "_delta", which holds an 
+    integer delta to be applied to all items in the heap.
+
+    decreaseAllKeys() would simply modify the value of _delta, running in O(1) time.
+
+    Any method that uses the value of a key would instead use (key + _delta). Since the 
+    cost of the addition is constant, it will not affect the running time of any method.
+
+    When inserting a new key, its value should be set to (key - _delta), to ensure the 
+    value read from it later is not distorted by calls to decreaseAllKeys() that occurred 
+    before the element was added.
 
 5.)---------------------------------------------------------------------------------------
     My response to this question can be found at
