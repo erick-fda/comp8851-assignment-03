@@ -23,8 +23,12 @@
         ./COMP8851_Asg03_A00925871/Question01/CopyInsert.cpp
 
 2.)---------------------------------------------------------------------------------------
-    My response to this question can be found at
-        ./COMP8851_Asg03_A00925871/Question02/
+    The running time of heapsort for presorted input is O(NlogN). This is 
+    because creating the binary heap has O(N) running time; and a deleteMin or deleteMax 
+    operation on the heap takes O(logN) time, and must be performed N times.
+
+    The important thing to note is that heapsort's running time is NOT affected one way 
+    or the other by having presorted input.
 
 3.)---------------------------------------------------------------------------------------
     My response to this question can be found at
