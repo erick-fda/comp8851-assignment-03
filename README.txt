@@ -117,6 +117,5 @@
     or decrease the text size if necessary.
 
 8.)---------------------------------------------------------------------------------------
-    My response to this question can be found at
-        ./COMP8851_Asg03_A00925871/Question08/
+    No response. Sorry!
     
