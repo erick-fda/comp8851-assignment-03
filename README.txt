@@ -20,46 +20,102 @@
 ==========================================================================================
 1.)---------------------------------------------------------------------------------------
     My response to this question can be found at
-        ./COMP8851_Asg03_A00925871/Question01/
+        ./COMP8851_Asg03_A00925871/Question01/CopyInsert.cpp
 
 2.)---------------------------------------------------------------------------------------
-    My response to this question can be found at
-        ./COMP8851_Asg03_A00925871/Question02/
+    The running time of heapsort for presorted input is O(NlogN). This is 
+    because creating the binary heap has O(N) running time; and a deleteMin or deleteMax 
+    operation on the heap takes O(logN) time, and must be performed N times.
+
+    The important thing to note is that heapsort's running time is NOT affected one way 
+    or the other by having presorted input.
 
 3.)---------------------------------------------------------------------------------------
-    My response to this question can be found at
-        ./COMP8851_Asg03_A00925871/Question03/
+    As per the textbook, rehasing to make the table roughly twice as large is an O(N) 
+    operation, but because it needs to be preceded (and, in a sense, triggered) by 
+    roughly N/2 insertions, it is equivalent in the long term to adding a constant 
+    running time cost to each insertion.
+
+    We should follow similar logic for deciding when to rehash and make the table smaller. 
+    If the table is to be made about half as large, then we should rehash when the table 
+    is about half empty (that is, when there are roughly half as many elements as the 
+    size of the table and the load factor is roughly 0.5).
+    
+    This means that at the time a rehash to a smaller table occurs, there will have been 
+    roughly N/2 deletions since the last rehash. This means that the the cost of 
+    rehashing to a smaller table in the long term will be similar to adding a constant 
+    cost to each deletion.
 
 4.)---------------------------------------------------------------------------------------
-    My response to this question can be found at
-        ./COMP8851_Asg03_A00925871/Question04/
+    I will describe the necessary changes for a binary heap.
+
+    This can be achieved simply by having the heap keep a field "_delta", which holds an 
+    integer delta to be applied to all items in the heap.
+
+    decreaseAllKeys() would simply modify the value of _delta, running in O(1) time.
+
+    Any method that uses the value of a key would instead use (key + _delta). Since the 
+    cost of the addition is constant, it will not affect the running time of any method.
+
+    When inserting a new key, its value should be set to (key - _delta), to ensure the 
+    value read from it later is not distorted by calls to decreaseAllKeys() that occurred 
+    before the element was added.
 
 5.)---------------------------------------------------------------------------------------
-    My response to this question can be found at
-        ./COMP8851_Asg03_A00925871/Question05/
+    The strongly connected sets of components in the given graph are as follows:
+
+    { A, B, C, D, E, G }, 
+
+    { F }
+
+    There is a path from every node except F to every other node except F. Node F has two 
+    edges entering it but no edges leaving it, and thus cannot be strongly connected to 
+    any other node.
 
 6.)---------------------------------------------------------------------------------------
-    My response to this question can be found at
+    My source code for this question can be found at
         ./COMP8851_Asg03_A00925871/Question06/
 
+    The executable at 
+        
+        ./COMP8851_Asg03_A00925871/Debug/Question06.exe
+
+    can be run without arguments. This program runs a test of the CuckooHashTable class, 
+    demonstrating the functionality of its methods.
+
 7.)---------------------------------------------------------------------------------------
-    Place the N players in an array of size N with indeces [0-(N-1)].
+    Place the N players in a "roster" array of size N.
 
-    For each iteration of the algorithm (i.e., each day in the tournament), make each 
-    player with index i < N/2 play against the player with index j = ((N / 2) + i).
+    Make a two-dimensional array for the tournament schedule with N-1 rows and N columns. 
+    Each row represents a day of the tournament and each cell in the row represents the 
+    opponent to be faced by the player with that cell's index on that day.
 
-    Then remove the last item in the array, move all items with indeces > 0 to the right 
-    by one, and reinsert the previously last element at index 1. Pass the new array to 
-    the next iteration of recursive algorithm.
+    For each iteration of the algorithm (i.e., each day in the tournament), fill out a 
+    day in the tournament schedule. Make each player with index i < N/2 in the roster 
+    play against the player with index N-(1+i) on this day.
+
+    Then remove the last item in the roster array, move all items with indeces > 0 to the 
+    right by one, and reinsert the previously last element at index 1. Pass the new roster 
+    array to the next iteration of the recursive algorithm.
     
-    Once a depth of N-1 is reached, return the schedule for the day. Each iteration 
-    should append the result of its subsequent iteration to the end of its own and return 
-    that as the result. The list returned by the top-level iteration will be the schedule 
-    for the tournament.
+    Once a depth of N-1 is reached, return, folding up through the recursive calls to the 
+    original. The two-dimensional schedule array will now be filled with the schedule 
+    data for the entire tournament.
+
+    My source code for this question can be found at
+        ./COMP8851_Asg03_A00925871/Question07/Question07.cpp
+
+    The executable at 
+        
+        ./COMP8851_Asg03_A00925871/Debug/Question07.exe
+
+    can be run by providing a single command-line argument for k. So if 3 is given as the 
+    argument, for example, a tournament schedule for 8 (2^k) players will be generated. 
     
-    
+    Note that since the program prints the two-dimensional schedule array, the output may 
+    become oddly formatted on a small window if the given k is large. Enlarge the window 
+    or decrease the text size if necessary.
 
 8.)---------------------------------------------------------------------------------------
-    My response to this question can be found at
-        ./COMP8851_Asg03_A00925871/Question08/
+    No response. Sorry!
     
