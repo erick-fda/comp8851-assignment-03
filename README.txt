@@ -31,8 +31,20 @@
     or the other by having presorted input.
 
 3.)---------------------------------------------------------------------------------------
-    My response to this question can be found at
-        ./COMP8851_Asg03_A00925871/Question03/
+    As per the textbook, rehasing to make the table roughly twice as large is an O(N) 
+    operation, but because it needs to be preceded (and, in a sense, triggered) by 
+    roughly N/2 insertions, it is equivalent in the long term to adding a constant 
+    running time cost to each insertion.
+
+    We should follow similar logic for deciding when to rehash and make the table smaller. 
+    If the table is to be made about half as large, then we should rehash when the table 
+    is about half empty (that is, when there are roughly half as many elements as the 
+    size of the table and the load factor is roughly 0.5).
+    
+    This means that at the time a rehash to a smaller table occurs, there will have been 
+    roughly N/2 deletions since the last rehash. This means that the the cost of 
+    rehashing to a smaller table in the long term will be similar to adding a constant 
+    cost to each deletion.
 
 4.)---------------------------------------------------------------------------------------
     My response to this question can be found at
